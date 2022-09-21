@@ -23,6 +23,10 @@
     <link
       href="{{ url_for('static', filename='common.css') }}"
       rel="stylesheet" />
+      <!--google font-->
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
@@ -219,12 +223,28 @@
                 <input
                   type="text"
                   placeholder="ID"
-                  class="input input-bordered w-[25rem]"
-                  id="input-username" />
+                  class="input w-[25rem]"
+                  id="input-username" 
+                  style="background: rgba( 255, 255, 255, 0.2 );
+                      box-shadow: 0 4px 4px 0 rgba( 31, 38, 135, 0.17 );
+                      backdrop-filter: blur( 20px );
+                      -webkit-backdrop-filter: blur( 20px );
+                      border-radius: 10px;
+                      border: 1px solid rgba( 255, 255, 255, 0.18 );
+                      border-bottom-right-radius: 0px 0px;
+                      border-top-right-radius: 0px 0px;"/>
                 <button
                   class="btn btn-square w-[4rem]"
                   id="double-chk"
-                  onclick="check_dup()">
+                  onclick="check_dup()"
+                  style="background: rgba( 0, 0, 0, 0.2 );
+                      box-shadow: 0 4px 4px 0 rgba( 31, 38, 135, 0.17 );
+                      backdrop-filter: blur( 20px );
+                      -webkit-backdrop-filter: blur( 20px );
+                      border-radius: 10px;
+                      border: 1px solid rgba( 255, 255, 255, 0.18 );
+                      border-bottom-left-radius: 0px 0px;
+                      border-top-left-radius: 0px 0px;">
                   <span
                     class="material-symbols-outlined"
                     id="icon-done"
@@ -248,8 +268,14 @@
             <input
               type="text"
               placeholder="Password"
-              class="input input-bordered w-[29rem]"
-              id="input-password" />
+              class="input w-[29rem]"
+              id="input-password" 
+              style="background: rgba( 255, 255, 255, 0.2 );
+                  box-shadow: 0 4px 4px 0 rgba( 31, 38, 135, 0.17 );
+                  backdrop-filter: blur( 20px );
+                  -webkit-backdrop-filter: blur( 20px );
+                  border-radius: 10px;
+                  border: 1px solid rgba( 255, 255, 255, 0.18 );"/>
             <p class="text-xs text-[#333232]" id="help-password">
               영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요.
               특수문자(!@#$%^&*)도 사용 가능합니다.
@@ -258,8 +284,14 @@
             <input
               type="text"
               placeholder="Corrected Password"
-              class="input input-bordered w-[29rem]"
-              id="input-password2" />
+              class="input w-[29rem]"
+              id="input-password2"
+              style="background: rgba( 255, 255, 255, 0.2 );
+                  box-shadow: 0 4px 4px 0 rgba( 31, 38, 135, 0.17 );
+                  backdrop-filter: blur( 20px );
+                  -webkit-backdrop-filter: blur( 20px );
+                  border-radius: 10px;
+                  border: 1px solid rgba( 255, 255, 255, 0.18 );" />
             <p class="text-xs text-[#333232]" id="help-password">
               비밀번호를 다시 입력해주세요
             </p>
@@ -302,14 +334,26 @@
             <input
               type="text"
               placeholder="ID"
-              class="input input-bordered w-[29rem]"
-              id="input-username-login" />
+              class="input w-[29rem]"
+              id="input-username-login"
+              style="background: rgba( 255, 255, 255, 0.2 );
+                  box-shadow: 0 4px 4px 0 rgba( 31, 38, 135, 0.17 );
+                  backdrop-filter: blur( 20px );
+                  -webkit-backdrop-filter: blur( 20px );
+                  border-radius: 10px;
+                  border: 1px solid rgba( 255, 255, 255, 0.18 );"/>
             <p class="text-xs text-[#333232] mb-2" id="help-id-login"></p>
             <input
               type="text"
               placeholder="Password"
-              class="input input-bordered w-[29rem] mb-4"
-              id="input-password-login" />
+              class="input w-[29rem] mb-4"
+              id="input-password-login" 
+              style="background: rgba( 255, 255, 255, 0.2 );
+                    box-shadow: 0 4px 4px 0 rgba( 31, 38, 135, 0.17 );
+                    backdrop-filter: blur( 20px );
+                    -webkit-backdrop-filter: blur( 20px );
+                    border-radius: 10px;
+                    border: 1px solid rgba( 255, 255, 255, 0.18 );"/>
             <p class="text-xs text-white" id="help-password-login"></p>
             <div class="card-actions mt-[65px] justify-center">
               <button
@@ -326,7 +370,7 @@
                   color: #333232
                 ">
                 Login</button>
-                <div class="bottom-text">
+                <div class="bottom-text" style="font-family: 'Josefin Sans', sans-serif; font-size: 18px;">
                   Don't have an account yet?
               <p id="btn-signup" onclick="toggle_sign_up()"
               style="left: 14rem; top: -1px; position: absolute; font-weight: bold;">
