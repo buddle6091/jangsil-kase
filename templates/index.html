@@ -1,134 +1,220 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>지도 이동시키기</title>
-    <style>
-      #map {
-        width: 100%;
-        height: 800px;
-      }
 
-      .label {
-        margin-bottom: 96px;
-      }
-      .label * {
-        display: inline-block;
-        vertical-align: top;
-      }
-      .label .left {
-        background: url("https://t1.daumcdn.net/localimg/localimages/07/2011/map/storeview/tip_l.png")
-          no-repeat;
-        display: inline-block;
-        height: 24px;
-        overflow: hidden;
-        vertical-align: top;
-        width: 7px;
-      }
-      .label .center {
-        background: url(https://t1.daumcdn.net/localimg/localimages/07/2011/map/storeview/tip_bg.png)
-          repeat-x;
-        display: inline-block;
-        height: 24px;
-        font-size: 12px;
-        line-height: 24px;
-      }
-      .label .right {
-        background: url("https://t1.daumcdn.net/localimg/localimages/07/2011/map/storeview/tip_r.png") -1px
-          0 no-repeat;
-        display: inline-block;
-        height: 24px;
-        overflow: hidden;
-        width: 6px;
-      }
-    </style>
-    <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@2.28.0/dist/full.css"
-      rel="stylesheet"
-      type="text/css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body>
-    <div id="map"></div>
-    <button
-      class="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg"
-      onclick="setCenter()">
-      지도 중심좌표 이동시키기
-    </button>
-    &nbsp;
-    <button class="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg" onclick="panTo()">
-      지도 중심좌표 부드럽게 이동시키기
-    </button>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+        <title>장실 카세</title>
+        <script type="text/javascript"
+                src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=8upij7t8ji&submodules=geocoder"></script>
 
-    <script
-      type="text/javascript"
-      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6d08e1b8eafaeb14714c7d55d2409a4"></script>
-    <script>
-      var mapContainer = document.getElementById("map"), // 지도를 표시할 div
-        mapOption = {
-          center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-          level: 3, // 지도의 확대 레벨
-        };
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+              integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+              crossorigin="anonymous">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Jua&display=swap" rel="stylesheet">
 
-      var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+                crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+                integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+                crossorigin="anonymous"></script>
 
-      var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+        <style>
+            * {
+                font-family: 'Do Hyeon', sans-serif;
+            }
+            .wrap {
+                width: 100%;
+                max-width: 1000px;
+                margin: 0 auto;
+            }
 
-      // 마커를 표시할 위치와 title 객체 배열입니다
-      var positions = [
-        {
-          title: "카카오",
-          latlng: new kakao.maps.LatLng(33.450705, 126.570677),
-        },
-        {
-          title: "생태연못",
-          latlng: new kakao.maps.LatLng(33.450936, 126.569477),
-        },
-        {
-          title: "텃밭",
-          latlng: new kakao.maps.LatLng(33.450879, 126.56994),
-        },
-        {
-          title: "근린공원",
-          latlng: new kakao.maps.LatLng(33.451393, 126.570738),
-        },
-      ];
+            .banner {
+                width: 100%;
+                height: 20vh;
+                background-image: url("{{ url_for('static', filename='toilet.jpg') }}");
+                background-position: center;
+                background-size: contain;
+                background-repeat: repeat;
 
-      // 마커 이미지의 이미지 주소입니다
-      var imageSrc =
-        "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+            }
 
-      for (var i = 0; i < positions.length; i++) {
-        // 마커 이미지의 이미지 크기 입니다
-        var imageSize = new kakao.maps.Size(24, 35);
+            h1.title {
+                color: white;
+                font-size: 3rem;
+            }
 
-        // 마커 이미지를 생성합니다
-        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+            .toilet-list {
+                overflow: scroll;
+                width: 100%;
+                height: 500px;
+                position: relative;
+                border: 1px solid gold;
+            }
 
-        // 마커를 생성합니다
-        var marker = new kakao.maps.Marker({
-          map: map, // 마커를 표시할 지도
-          position: positions[i].latlng, // 마커를 표시할 위치
-          title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-          image: markerImage, // 마커 이미지
-        });
-      }
-      function setCenter() {
-        // 이동할 위도 경도 위치를 생성합니다
-        var moveLatLon = new kakao.maps.LatLng(33.452613, 126.570888);
+            .card-title, .card-subtitle {
+                display: inline;
+            }
 
-        // 지도 중심을 이동 시킵니다
-        map.setCenter(moveLatLon);
-      }
+            #map {
+                width: 70%;
+                height: 66vh;
+                margin: 20px auto 20px auto;
+                float: left;
+                margin-right: 10px;
+            }
 
-      function panTo() {
-        // 이동할 위도 경도 위치를 생성합니다
-        var moveLatLon = new kakao.maps.LatLng(33.45058, 126.574942);
+            .iw-inner {
+                padding: 10px;
+                font-size: smaller;
+            }
+            .card {
+                height: 200px;
+                padding-top: 10px;
+                line-height: 35px;
 
-        // 지도 중심을 부드럽게 이동시킵니다
-        // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
-        map.panTo(moveLatLon);
-      }
-    </script>
-  </body>
+            }
+            #toilet-box {
+                float: right;
+                width: 28%;
+                margin: 20px auto 20px auto;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="wrap">
+            <div class="banner">
+                <div class="d-flex flex-column align-items-center"
+                     style="background-color: rgba(0,0,0,0.5);width: 100%;height: 100%;">
+                    <h1 class="title mt-5 mb-2">장실 카세</h1>
+                </div>
+            </div>
+            <div id="map">
+            </div>
+						<div class="toilet-list" id="toilet-box" >
+                <div class="card" id="card-0">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="#" class="toilet-title">화장실</a></h5>
+                        <p class="card-text">주소</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+ <script>
+            let y_cen = 37.661274   // lat
+            let x_cen = 127.06022  // long
+            let map;
+            let markers = [];
+            let infowindows = [];
+
+            $(document).ready(function () {
+                map = new naver.maps.Map('map', {
+                    center: new naver.maps.LatLng(y_cen, x_cen),
+                    zoom: 15,
+                    zoomControl: true,
+                    zoomControlOptions: {
+                        style: naver.maps.ZoomControlStyle.SMALL,
+                        position: naver.maps.Position.TOP_RIGHT
+                    }
+                });
+                get_toilet();
+            })
+
+            function make_card(i, toilet) {
+                let temp_html = `<div class="card" id="card-${i}">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><a href="javascript:click2center('${i}')" class="toilet-title">${toilet.title} 화장실</a></h5>
+                                        <p class="card-text">${toilet.address}</p>
+                                        <a href="https://map.kakao.com/link/to/${toilet['title']},${toilet['mapy']},${toilet['mapx']}" target="_blank"><button type="button" class="btn btn-outline-danger">길찾기</button></a>
+                                   </div>
+                                </div>`
+                $('#toilet-box').append(temp_html);
+            }
+
+            function get_toilet() {
+                $('#toilet-box').empty();
+                $.ajax({
+                    type: "GET",
+                    url: '/toilet',
+                    data: {},
+                    success: function (response) {
+                        let toilets = response["toilet_list"]
+                        for (let i = 0; i < toilets.length; i++) {
+                            let toilet = toilets[i]
+                            make_card(i, toilet);
+                            let marker = make_marker(toilet);
+                            add_info(i, marker, toilet);
+                        }
+                    }
+                });
+            }
+
+
+            function make_marker(toilet) {
+                let marker = new naver.maps.Marker({
+                    position: new naver.maps.LatLng(toilet["mapy"], toilet["mapx"]),
+                    map: map
+                });
+                markers.push(marker);
+                return marker
+            }
+
+
+            function add_info(i, marker, toilet) {
+                let html_temp = `<div class="iw-inner">
+                                    <h5>${toilet['title']}</h5>
+                                    <p>${toilet['address']}
+                                    <a href="https://map.kakao.com/link/to/${toilet['title']},${toilet['mapy']},${toilet['mapx']}" target="_blank"><button type="button" class="btn btn-outline-danger">길찾기</button></a>
+                                    <button class="btn btn-outline btn-info" style="color: white;"><a href="/dd" onclick="review()">리뷰</a></button>
+                                    </div>`;
+
+
+                let infowindow = new naver.maps.InfoWindow({
+                    content: html_temp,
+                    maxWidth: 200,
+                    backgroundColor: "#fff",
+                    borderColor: "#888",
+                    borderWidth: 2,
+                    anchorSize: new naver.maps.Size(15, 15),
+                    anchorSkew: true,
+                    anchorColor: "#fff",
+                    pixelOffset: new naver.maps.Point(10, -10)
+                });
+                infowindows.push(infowindow)
+
+
+                naver.maps.Event.addListener(marker, "click", function (e) {
+                    if (infowindow.getMap()) {
+                        infowindow.close();
+                    } else {
+                        infowindow.open(map, marker);
+                        map.setCenter(infowindow.position)
+                        $("#toilet-box").animate({
+                            scrollTop: $("#toilet-box").get(0).scrollTop + $(`#card-${i}`).position().top
+                        }, 2000);
+                    }
+                });
+}
+                function click2center(i) {
+                    let marker = markers[i]
+                    let infowindow = infowindows[i]
+                    if (infowindow.getMap()) {
+                        infowindow.close();
+                    } else {
+                        infowindow.open(map, marker);
+                        map.setCenter(infowindow.position)
+                    }
+                }
+        </script>
 </html>

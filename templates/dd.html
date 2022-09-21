@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/daisyui@2.28.0/dist/full.css"
+            rel="stylesheet"
+            type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-image: url("/static/배경.jpg");
+            background-position: center;
+            background-size: cover;
+            height: 100vh;
+        }
+
+        .shadow-xl {
+            margin: auto;
+            top: 50%;
+        }
+
+        .card-title {
+            margin-top: -20px;
+        }
+
+        .toilet-info {
+            padding-top: 4%;
+        }
+
+        .name-box {
+            margin: auto;
+            display: flex;
+            width: 80%;
+            justify-content: space-between;
+        }
+
+        .comment {
+            text-align: left;
+            padding-left: 10px;
+            width: 80%;
+        }
+
+        .comment-box {
+            width: 90%;
+            height: 300px;
+            overflow-y: scroll;
+        }
+
+        .comment-box > img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .form-select {
+            width: 50px;
+        }
+
+        .textarea {
+            width: 200px;
+        }
+
+        .review-box {
+            align-items: center;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        .replbox {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            margin: 10px auto auto;
+        }
+
+        .btn-success {
+            margin-left: 10px;
+            width: 62px;
+        }
+
+        .btn-info {
+            margin-right: 10px;
+            width: 62px;
+        }
+
+        .custom-file {
+            display: flex;
+            margin-left: 62px;
+        }
+
+        .name-input {
+            width: 100px;
+            margin-top: -3px;
+            margin-left: -8px;
+            margin-right: 3px;
+            padding: 5px;
+
+            border: 1px solid #1de9b6;
+            border-radius: 5px;
+        }
+
+        .input-group {
+            margin: 5px auto auto;
+            border: 1px solid #1de9b6;
+            border-radius: 7px;
+            width: 350px;
+        }
+    </style>
+</head>
+<body>
+<!--ajax 콜 해야함-->
+<div id="toilet-info" class="toilet-info">
+    <div class="card w-96 bg-base-300 shadow-xl">
+        <figure class="px-2 pt-10">
+            <img src="../static/다운로드.jpg" alt="Shoes" class="rounded-xl"/>
+        </figure>
+        <div class="card-body items-center text-center">
+            <div id="title_address">
+                <h2 class="card-title" id="title">공중화장실</h2>
+                <div id="address">주소</div>
+            </div>
+            <div id="starAvg">평균 별점</div>
+            <!--아래부터는 for문돌려서-->
+            <div class="comment-box" id="comment-box">
+            </div>
+            <div class="card-actions justify-end">
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01">별점</label>
+                    <select class="form-select" id="star_rating">
+                        <option selected>-- 선택하기 --</option>
+                        <option value="1">⭐</option>
+                        <option value="2">⭐⭐</option>
+                        <option value="3">⭐⭐⭐</option>
+                        <option value="4">⭐⭐⭐⭐</option>
+                        <option value="5">⭐⭐⭐⭐⭐</option>
+                    </select>
+                </div>
+                <div class="custom-file">
+                    <input type="text" id="username" class="name-input" placeholder="닉네임">
+                    <input type="file" class="custom-file-input" id="file">
+                </div>
+                <div class="replbox" id="review-box">
+                    <button class="btn btn-outline btn-info" style="color: white;"><a href="/">메인</a></button>
+                    <textarea class="textarea textarea-success" id="comment" placeholder="리뷰를 남겨주세요."></textarea>
+                    <button class="btn btn-outline btn-success" style="color: white;" onclick="posting()">등록
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+<script>
+    $(document).ready(function () {
+        listing()
+    })
+
+    function listing() {
+        $.ajax({
+            type: "GET",
+            url: "/info",
+            data: {}, // 공중화장실 데이터 받아온후 공중화장실, 주소, 이미지에 삽입
+            success: function (response) {
+                let comment_list = response['users']
+                for (let i = 0; i < comment_list.length; i++) {
+                    let username = comment_list[i]['username']
+                    let star = comment_list[i]['star']
+                    let comment = comment_list[i]['comment']
+                    let file = comment_list[i]['file']
+
+                    let star_image = '⭐'.repeat(star)
+
+                    let temp_html = `<img src="../static/${file}" class="img">
+                                        <div class="review-box">
+                                        <div class="name-box">
+                                            <div id="name">${username}</div>
+                                            <div id="star">${star_image}</div>
+                                        </div>
+                                        <div class="comment">${comment}</div>
+                                        </div>`
+                    $('#comment-box').append(temp_html)
+                }
+            }
+        })
+    }
+
+    function posting() {
+        let username = $('#username').val()
+        let star = $('#star_rating').val()
+        let comment = $('#comment').val()
+        let file = $('#file')[0].files[0]
+        let form_data = new FormData()
+
+        form_data.append("file_give", file)
+        form_data.append("username_give", username)
+        form_data.append("star_give", star)
+        form_data.append("comment_give", comment)
+
+        $.ajax({
+            type: "POST",
+            url: "/info",
+            data: form_data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                alert(response["msg"])
+                window.location.reload()
+            }
+        })
+    }
+
+    $(document).ready(function () {
+        get_toilet();
+    })
+
+    function get_toilet() {
+        $.ajax({
+            type: "GET",
+            url: '/toilet',
+            data: {},
+            success: function (response) {
+                let toilets = response["toilet_list"]
+                let title = response["toilet_list"]['title']
+                console.log(toilets)
+                // let valuesArray = Object.entries(toilets)
+                // for(let value of valuesArray){
+                //     console.log(value)
+                // }
+                for(let i=0; i<toilets.length; i++){
+                    let toilet = toilets[i]
+                    add_info(toilet)
+                }
+            }
+        });
+    }
+
+
+    function add_info(toilet) {
+        let temp_html = `<h2 class="card-title" id="title">${toilet['title']}</h2>
+                                             <div id="address">${toilet['address']}</div>`
+        $('#title_address').append(temp_html)
+    }
+</script>
+</html>
