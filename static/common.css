@@ -1,0 +1,214 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+
+  justify-content: center;
+  margin: 0, auto;
+  background: linear-gradient(245deg, #7f7fd5, #86a8e7, #91eae4, #9bb5e1);
+  background-size: 800% 800%;
+
+  -webkit-animation: AnimationName 7s ease infinite;
+  -moz-animation: AnimationName 7s ease infinite;
+  -o-animation: AnimationName 7s ease infinite;
+  animation: AnimationName 7s ease infinite;
+}
+
+@-webkit-keyframes AnimationName {
+  0% {
+    background-position: 86% 0%;
+  }
+  50% {
+    background-position: 15% 100%;
+  }
+  100% {
+    background-position: 86% 0%;
+  }
+}
+@-moz-keyframes AnimationName {
+  0% {
+    background-position: 86% 0%;
+  }
+  50% {
+    background-position: 15% 100%;
+  }
+  100% {
+    background-position: 86% 0%;
+  }
+}
+@-o-keyframes AnimationName {
+  0% {
+    background-position: 86% 0%;
+  }
+  50% {
+    background-position: 15% 100%;
+  }
+  100% {
+    background-position: 86% 0%;
+  }
+}
+@keyframes AnimationName {
+  0% {
+    background-position: 86% 0%;
+  }
+  50% {
+    background-position: 15% 100%;
+  }
+  100% {
+    background-position: 86% 0%;
+  }
+}
+
+* {
+  user-select: none;
+}
+
+.blurfilter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(6px);
+}
+
+.alert-window {
+  widht: 50%;
+}
+
+.main-logo {
+  width: 10rem;
+  height: 10rem;
+  padding: 0 auto;
+  border-radius: 5rem;
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 8px 8px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(13px);
+  -webkit-backdrop-filter: blur(13px);
+  position: absolute;
+  z-index: 10;
+}
+
+.glass-container {
+  width: 33rem;
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 45px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.bottom-text {
+  margin-top: 6.5rem;
+  color: #595959;
+  font-size: 16px;
+  font-weight: 200;
+  white-space: nowrap;
+  position: absolute;
+}
+
+.bottom-text p:hover {
+  animation: gelatine 0.5s infinite;
+}
+@keyframes gelatine {
+  from,
+  to {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(0.9, 1.1);
+  }
+  50% {
+    transform: scale(1.1, 0.9);
+  }
+  75% {
+    transform: scale(0.95, 1.05);
+  }
+}
+
+.loading-ani {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+
+  #loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -2.7em;
+    margin-left: -2.7em;
+    width: 5.4em;
+    height: 5.4em;
+    background-color: #404456;
+  }
+
+  #hill {
+    position: absolute;
+    width: 7.1em;
+    height: 7.1em;
+    top: 1.7em;
+    left: 1.7em;
+    background-color: transparent;
+    border-left: 0.25em solid whitesmoke;
+    transform: rotate(45deg);
+  }
+
+  #hill:after {
+    content: "";
+    position: absolute;
+    width: 7.1em;
+    height: 7.1em;
+    left: 0;
+    background-color: #404456;
+  }
+
+  #box {
+    position: absolute;
+    left: 0;
+    bottom: -0.1em;
+    width: 1em;
+    height: 1em;
+    background-color: transparent;
+    border: 0.25em solid whitesmoke;
+    border-radius: 15%;
+    transform: translate(0, -1em) rotate(-45deg);
+    animation: push 2.5s cubic-bezier(0.79, 0, 0.47, 0.97) infinite;
+  }
+
+  @keyframes push {
+    0% {
+      transform: translate(0, -1em) rotate(-45deg);
+    }
+    5% {
+      transform: translate(0, -1em) rotate(-50deg);
+    }
+    20% {
+      transform: translate(1em, -2em) rotate(47deg);
+    }
+    25% {
+      transform: translate(1em, -2em) rotate(45deg);
+    }
+    30% {
+      transform: translate(1em, -2em) rotate(40deg);
+    }
+    45% {
+      transform: translate(2em, -3em) rotate(137deg);
+    }
+    50% {
+      transform: translate(2em, -3em) rotate(135deg);
+    }
+    55% {
+      transform: translate(2em, -3em) rotate(130deg);
+    }
+    70% {
+      transform: translate(3em, -4em) rotate(217deg);
+    }
+    75% {
+      transform: translate(3em, -4em) rotate(220deg);
+    }
+    100% {
+      transform: translate(0, -1em) rotate(-225deg);
+    }
+  }
+}
