@@ -228,19 +228,19 @@
                   <span
                     class="material-symbols-outlined"
                     id="icon-done"
-                    style="color: #111827; background-color: transparent">
+                    style="color: #ffffff; background-color: transparent">
                     Done
                   </span>
                   <span
                     class="hidden material-symbols-outlined"
                     id="icon-ver"
-                    style="color: #111827; background-color: transparent">
+                    style="color: green; background-color: transparent">
                     verified
                   </span>
                 </button>
               </div>
             </div>
-            <p class="text-xs text-white" id="help-id">
+            <p class="text-xs text-[#333232]" id="help-id">
               영문과 숫자 조합의 6-15자의 아이디를 설정해주세요.
               특수문자(!@#$%^&*)도 사용 가능합니다.
             </p>
@@ -250,7 +250,7 @@
               placeholder="Password"
               class="input input-bordered w-[29rem]"
               id="input-password" />
-            <p class="text-xs text-white" id="help-password">
+            <p class="text-xs text-[#333232]" id="help-password">
               영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요.
               특수문자(!@#$%^&*)도 사용 가능합니다.
             </p>
@@ -260,26 +260,36 @@
               placeholder="Corrected Password"
               class="input input-bordered w-[29rem]"
               id="input-password2" />
-            <p class="text-xs text-white" id="help-password">
+            <p class="text-xs text-[#333232]" id="help-password">
               비밀번호를 다시 입력해주세요
             </p>
 
-            <div class="card-actions justify-end" id="div-btn-cb">
+            <div class="card-actions justify-end">
               <button
                 class="btn btn-primary"
                 onclick="sign_up()"
                 style="
-                  background: rgba(255, 255, 255, 0.3);
-                  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-                  backdrop-filter: blur(0px);
-                  -webkit-backdrop-filter: blur(0px);
-                  border-radius: 10px;
+                  background: rgba(255, 255, 255, 0.15);
+                  box-shadow: 0 8px 8px 0 rgba(31, 38, 135, 0.37);
+                  backdrop-filter: blur(2.5px);
+                  -webkit-backdrop-filter: blur(2.5px);
+                  border-radius: 20px;
                   border: 1px solid rgba(255, 255, 255, 0.18);
+                  color: #333232
                 ">
                 Confirm
               </button>
               &nbsp;
-              <button class="btn btn-primary" onclick="toggle_sign_up()">
+              <button class="btn btn-primary" onclick="toggle_sign_up()"
+              style="
+                  background: rgba(255, 255, 255, 0.15);
+                  box-shadow: 0 8px 8px 0 rgba(31, 38, 135, 0.37);
+                  backdrop-filter: blur(2.5px);
+                  -webkit-backdrop-filter: blur(2.5px);
+                  border-radius: 20px;
+                  border: 1px solid rgba(255, 255, 255, 0.18);
+                  color: #333232
+                ">
                 Back to login
               </button>
             </div>
@@ -287,49 +297,40 @@
         </div>
 
         <!-- 로그인 페이지 -->
-        <div class="glass-container" id="login-box" style="height: ">
+        <div class="glass-container" id="login-box" style="height: 25rem">
           <div class="card-body">
             <input
               type="text"
               placeholder="ID"
               class="input input-bordered w-[29rem]"
               id="input-username-login" />
-            <p class="text-xs text-white mb-2" id="help-id-login"></p>
+            <p class="text-xs text-[#333232] mb-2" id="help-id-login"></p>
             <input
               type="text"
               placeholder="Password"
               class="input input-bordered w-[29rem] mb-4"
               id="input-password-login" />
             <p class="text-xs text-white" id="help-password-login"></p>
-            <div class="card-actions mb-[-60px] justify-end">
+            <div class="card-actions mt-[65px] justify-center">
               <button
-                class="btn btn-primary"
+                class="btn btn-primary w-[10rem]"
                 id="btn-login"
                 onclick="sign_in()"
                 style="
                   background: rgba(255, 255, 255, 0.15);
-                  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+                  box-shadow: 0 8px 8px 0 rgba(31, 38, 135, 0.37);
                   backdrop-filter: blur(2.5px);
                   -webkit-backdrop-filter: blur(2.5px);
-                  border-radius: 10px;
+                  border-radius: 20px;
                   border: 1px solid rgba(255, 255, 255, 0.18);
+                  color: #333232
                 ">
-                Login</button
-              >&nbsp;
-              <button
-                class="btn btn-primary"
-                id="btn-signup"
-                onclick="toggle_sign_up()"
-                style="
-                  background: rgba(255, 255, 255, 0.15);
-                  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-                  backdrop-filter: blur(2.5px);
-                  -webkit-backdrop-filter: blur(2.5px);
-                  border-radius: 10px;
-                  border: 1px solid rgba(255, 255, 255, 0.18);
-                ">
-                Sign Up
-              </button>
+                Login</button>
+                <div class="bottom-text">
+                  Don't have an account yet?
+              <p id="btn-signup" onclick="toggle_sign_up()"
+              style="left: 14rem; top: -1px; position: absolute; font-weight: bold;">
+                Sign Up </p>
             </div>
           </div>
         </div>
