@@ -13,8 +13,8 @@ app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
 
-client = MongoClient('mongodb://54.180.95.101', 27017, username='test', password='sparta')
-db = client.omakase
+client=MongoClient('15.165.204.234', 27017, username="test", password="test")
+db = client.dbsparta_plus_week_1
 
 @app.route('/')
 def home():
@@ -91,7 +91,7 @@ def sign_up():
 def check_dup():
     # ID 중복확인
     username_receive = request.form['username_give']
-    exists = bool(db.users.find_one({"username": username_receive}))
+    exists = bool(db.users.find_one({'username': username_receive}))
     return jsonify({'result': 'success', 'exists': exists})
 
 
