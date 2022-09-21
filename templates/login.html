@@ -205,7 +205,9 @@
           success: function (response) {
             if (response["result"] == "success") {
               $.cookie("mytoken", response["token"], { path: "/" });
-              $('#loading')
+              $('#loading').removeClass('hidden');
+              setTimeout(function () {
+                $('#loading').addClass('hidden')}, 3000);
               alert(username + "님 안녕하세요.");
               window.location.replace("/");
             } else {
@@ -217,13 +219,13 @@
     </script>
   </head>
   <body>
-    <div class="loading-ani" id="loading">
-      <div id="loader">
-        <div id="box"></div>
-        <div id="hill"></div>
-      </div>
-    </div>
     <div class="blurfilter">
+      <div class="hidden loading-ani" id="loading">
+        <div id="loader">
+          <div id="box"></div>
+          <div id="hill"></div>
+        </div>
+      </div>
       <div class="alert-window" id="alert"> 
           </div>
       <div
