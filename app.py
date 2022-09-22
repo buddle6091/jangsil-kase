@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 from pymongo import MongoClient
 from datetime import datetime
 
-
 app = Flask(__name__)
 
 # client = MongoClient('localhost', 27017)
@@ -10,13 +9,14 @@ client = MongoClient('15.165.204.234', 27017, username="test", password="test")
 db = client.dbsparta_plus_week_1
 
 
+
 @app.route('/')
 def main():
     return render_template("index.html")
 
-@app.route("/dd")
-def dd():
-    return render_template("dd.html")
+# @app.route("/review")
+# def dd():
+#     return render_template("dd.html")
 
 @app.route('/info', methods=["POST"])
 def info_post():
@@ -24,6 +24,7 @@ def info_post():
     star_receive = request.form['star_give']
     comment_receive = request.form['comment_give']
     file = request.files["file_give"]
+    title_receive = request.form['title_give']
 
     extension = file.filename.split('.')[-1]
 
@@ -38,14 +39,15 @@ def info_post():
         'username': username_receive,
         'star': star_receive,
         'comment': comment_receive,
-        'file': f'{filename}.{extension}'
+        'file': f'{filename}.{extension}',
+        'title': title_receive
     }
-    db.users.insert_one(doc)
+    db.review.insert_one(doc)
     return jsonify({'msg': '등록 완료!'})
 
 @app.route('/info', methods=["GET"])
 def info_get():
-    comment_list = list(db.users.find({}, {'_id': False}))
+    comment_list = list(db.review.find({}, {'_id': False}))
     return jsonify({'users': comment_list})
 
 @app.route('/toilet', methods=["GET"])
