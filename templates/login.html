@@ -205,11 +205,11 @@
           success: function (response) {
             if (response["result"] == "success") {
               $.cookie("mytoken", response["token"], { path: "/" });
-              alert(username + "님 안녕하세요.");
               $('#loading').removeClass('hidden');
-              /*setTimeout(function () {
-                $('#loading').removeClass('hidden')}, 5000);*/
-              //window.location.replace("/");
+              setTimeout(function () {
+                $('#loading').addClass('hidden')}, 3000);
+              alert(username + "님 안녕하세요.");
+              window.location.replace("/");
             } else {
               alert(response["msg"]);
             }

@@ -131,8 +131,6 @@ body {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.2);
-  position: absolute;
-  z-index: 1000;
 }
 
 #loader {
@@ -144,7 +142,6 @@ body {
   width: 5.4em;
   height: 5.4em;
   background-color: #404456;
-  z-index: 1000;
 }
 
 #hill {
@@ -156,7 +153,6 @@ body {
   background-color: transparent;
   border-left: 0.25em solid whitesmoke;
   transform: rotate(45deg);
-  z-index: 1000;
 }
 
 #hill:after {
@@ -166,7 +162,6 @@ body {
   height: 7.1em;
   left: 0;
   background-color: #404456;
-  z-index: 1000;
 }
 
 #box {
@@ -180,7 +175,6 @@ body {
   border-radius: 15%;
   transform: translate(0, -1em) rotate(-45deg);
   animation: push 2.5s cubic-bezier(0.79, 0, 0.47, 0.97) infinite;
-  z-index: 1000;
 }
 
 @keyframes push {
