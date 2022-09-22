@@ -218,10 +218,11 @@
                 setTimeout(() => {
                     window.location.replace("/");
                 }, 4000)
-                $('#loading').addClass('hidden')
+                $('#loading').addClass('hidden');
 
             } else {
               alert(response["msg"]);
+              $('#loading').addClass('hidden');
             }
           },
         });
