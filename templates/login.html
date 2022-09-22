@@ -164,14 +164,18 @@
             password_give: password,
           },
           success: function (response) {
-            alert_html =`<div class="alert alert-success shadow-lg w-[30vw]">
-              <div>
-                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                <span>Your purchase has been confirmed!</span>
-              </div>
-            </div>`
-             $('#alert').remove(alert_html)             
-            window.location.replace("/login");
+              setTimeout(() => {
+                    $('#loading').removeClass('hidden');
+                }, 0)
+              alert('회원이 되셨습니다 :)');
+
+              setTimeout(() => {
+                    $('#loading').addClass('hidden');
+                    $('#alert').removeClass(alert_html);
+                }, 3000)
+              setTimeout(() => {
+                    window.location.replace("/login");
+                }, 3000)
           },
         });
       }
@@ -203,13 +207,19 @@
             password_give: password,
           },
           success: function (response) {
-            if (response["result"] == "success") {
-              $.cookie("mytoken", response["token"], { path: "/" });
               $('#loading').removeClass('hidden');
-              setTimeout(function () {
-                $('#loading').addClass('hidden')}, 3000);
-              alert(username + "님 안녕하세요.");
-              window.location.replace("/");
+            if (response["result"] == "success") {
+                $.cookie("mytoken", response["token"], { path: "/" });
+                setTimeout(() => {
+                    $('#loading').removeClass('hidden');
+                    //alert('님 장실카세에 오신 것을 환영합니다 :)');
+                }, 0)
+
+                setTimeout(() => {
+                    window.location.replace("/");
+                }, 4000)
+                $('#loading').addClass('hidden')
+
             } else {
               alert(response["msg"]);
             }
@@ -221,13 +231,13 @@
   <body>
     <div class="blurfilter">
       <div class="hidden loading-ani" id="loading">
-        <div id="loader">
-          <div id="box"></div>
-          <div id="hill"></div>
-        </div>
+        <div class="loader">
+      <div class="inner one"></div>
+      <div class="inner two"></div>
+      <div class="inner three"></div>
+</div>
       </div>
-      <div class="alert-window" id="alert"> 
-          </div>
+
       <div
         class="justify-center items-center absolute"
         style="top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1)">
