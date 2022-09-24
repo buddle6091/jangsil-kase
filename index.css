@@ -1,0 +1,163 @@
+ * {
+            font-family: 'Do Hyeon', sans-serif;
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1.title {
+            color: white;
+            font-size: 3rem;
+        }
+
+        .toilet-list {
+            overflow: scroll;
+            width: 100%;
+            height: 500px;
+            position: relative;
+            border: 1px solid gold;
+        }
+
+        .card-title, .card-subtitle {
+            display: inline;
+        }
+
+        #map {
+            width: 70%;
+            height: 66vh;
+            margin: 20px auto 20px auto;
+            float: left;
+            margin-right: 10px;
+        }
+
+        .iw-inner {
+            padding: 10px;
+            font-size: smaller;
+        }
+
+        .card {
+            height: 200px;
+            padding-top: 10px;
+            line-height: 35px;
+
+        }
+
+        #toilet-box {
+            float: right;
+            width: 28%;
+            margin: 20px auto 20px auto;
+        }
+
+        .shadow-xl {
+            margin-left: 30px;
+            margin-top: -100px;
+            width: 400px;
+
+            background-color: #1de9b6;
+            border-radius: 20px;
+        }
+
+        .rounded-xl{
+            margin-top: 5px;
+            margin-left: -3px;
+            width: 390px;
+            border-radius: 20px;
+        }
+
+        .title_address > .card-title {
+            font-size: 20px;
+        }
+
+        .title_address{
+            margin-top: -10px;
+        }
+        .toilet-info {
+            position: absolute;
+        }
+
+        .comment-box {
+            margin: auto;
+            width: 90%;
+            height: 300px;
+            overflow-y: scroll;
+        }
+
+        .comment-box > img {
+            margin-left: -270px;
+            width: 40px;
+            height: 40px;
+        }
+
+        .card-actions{
+            margin: auto;
+        }
+
+        .form-select {
+            margin-left: 20px;
+            width: 200px;
+        }
+
+        .textarea {
+            width: 200px;
+        }
+
+        .replbox {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+            margin-left: -10px;
+        }
+
+        .btn-success {
+            margin-left: 10px;
+            width: 62px;
+        }
+
+        .custom-file {
+            display: flex;
+            vertical-align: center;
+            margin-left: 47px;
+        }
+
+        .name-input {
+            width: 100px;
+            margin-top: -3px;
+            margin-left: -8px;
+            margin-right: 3px;
+            padding: 5px;
+
+            border: 1px solid #1de9b6;
+            border-radius: 5px;
+        }
+
+        .input-group {
+            margin-top: 5px;
+            margin-left: 40px;
+            border-radius: 7px;
+            width: 350px;
+        }
+
+        .custom-file-input{
+            margin-top: 2px;
+            width: 200px;
+            opacity: 1;
+        }
+
+        .textarea{
+            padding: 10px;
+        }
+
+        .name-box{
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .comment{
+            text-align: left;
+            margin-bottom: 15px;
+        }
