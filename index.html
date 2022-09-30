@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>장실 카세</title>
+    <script type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=8upij7t8ji&submodules=geocoder"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Jua&display=swap" rel="stylesheet">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../static/index.css"/>
+    <script src="../static/index.js"></script>
+    <style>
+        .banner {
+            width: 100%;
+            height: 20vh;
+            background-image: url("{{ url_for('static', filename='toilet.jpg') }}");
+            background-position: center;
+            background-size: contain;
+            background-repeat: repeat;
+        }
+    </style>
+    <script>
+    let y_cen = 37.661274   // lat
+    let x_cen = 127.06022  // long
+    let map;
+    let markers = [];
+    let infowindows = [];
+
+    // 지도띄우기
+    $(document).ready(function () {
+        map = new naver.maps.Map('map', {
+            center: new naver.maps.LatLng(y_cen, x_cen),
+            zoom: 15,
+            zoomControl: true,
+            zoomControlOptions: {
+                style: naver.maps.ZoomControlStyle.SMALL,
+                position: naver.maps.Position.TOP_RIGHT
+            }
+        });
+        get_toilet();
+    })
+
+    // 화면 우측에 해당 화장실 목록과 좌표를 전달해서 길찾기링크에 전달
+    function make_card(i, toilet) {
+        let temp_html = `<div class="card" id="card-${i}">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><a href="javascript:click2center('${i}')" class="toilet-title">${toilet.title} 화장실</a></h5>
+                                        <p class="card-text">${toilet.address}</p>
+                                        <a href="https://map.kakao.com/link/to/${toilet['title']},${toilet['mapy']},${toilet['mapx']}" target="_blank"><button type="button" class="btn btn-outline-danger">길찾기</button></a>
+                                        <a href=https://map.kakao.com/link/roadview/${toilet['mapy']},${toilet['mapx']}><button type="button" class="btn btn-outline-info">사진보기</button></a>
+                                   </div>
+                                </div>`
+        $('#toilet-box').append(temp_html);
+    }
+
+    //  add_info 함수에 값 전달
+    function get_toilet() {
+        $('#toilet-box').empty();
+        $.ajax({
+            type: "GET",
+            url: '/toilet',
+            data: {},
+            success: function (response) {
+                let toilets = response["toilet_list"]
+                for (let i = 0; i < toilets.length; i++) {
+                    let toilet = toilets[i]
+                    make_card(i, toilet);
+                    let marker = make_marker(toilet);
+                    add_info(i, marker, toilet);
+                }
+            }
+        });
+    }
+
+    // 받은 좌표를 통해 마커 찍어주기
+    function make_marker(toilet) {
+        let marker = new naver.maps.Marker({
+            position: new naver.maps.LatLng(toilet["mapy"], toilet["mapx"]),
+            map: map
+        });
+        markers.push(marker);
+        return marker
+    }
+
+    // 평균별점 구현(ing)
+    function aa() {
+        $.ajax({
+            type: "GET",
+            url: "/info",
+            data: {},
+            success: function (response) {
+                let comment_list = response['users']
+
+                for (let i = 0; i < comment_list.length; i++) {
+                    let title = comment_list[i]['title']
+                    let star = comment_list[i]['star']
+                    if(title === document.getElementById('title').innerHTML){
+                        for (let j=0; j<comment_list.length; j++){
+                            console.log(star)
+                        }
+                        // const star_array = [star]
+                        // let sum = 0;
+                        // for (let j=0; j<star_array.length; i++){
+                        //     sum += star_array[i];
+                        // }
+                    }
+                }
+
+                // if(title === document.getElementById('title').innerHTML){
+                //     for(let i=0; i<star.length)
+                // }
+            }
+        })
+    }
+
+    // 인포윈도우 띄워주기
+    function add_info(i, marker, toilet) {
+        let html_temp = `<div class="iw-inner">
+                            <h5>${toilet['title']}</h5>
+                            <p>${toilet['address']}</p>
+                            <a href="https://map.kakao.com/link/to/${toilet['title']},${toilet['mapy']},${toilet['mapx']}" target="_blank"><button type="button" class="btn btn-outline-danger">길찾기</button></a>
+                            <button type="button" onclick="review(), listing(), aa()" id="popup_open_btn" class="btn btn-outline-danger">리뷰보기</button>
+                        </div>`;
+
+
+        let infowindow = new naver.maps.InfoWindow({
+            content: html_temp,
+            maxWidth: 200,
+            backgroundColor: "#fff",
+            borderColor: "#888",
+            borderWidth: 2,
+            anchorSize: new naver.maps.Size(15, 15),
+            anchorSkew: true,
+            anchorColor: "#fff",
+            pixelOffset: new naver.maps.Point(10, -10)
+        });
+        infowindows.push(infowindow)
+
+
+        // 마커 클릭시 이벤트
+        naver.maps.Event.addListener(marker, "click", function (e) {
+            $('#title_address').empty()
+            let temp_html = `<div class="card-title" id="title">${toilet['title']}</div>
+                         <div id="address">${toilet['address']}</div>`
+            $('#title_address').append(temp_html)
+
+        // 마커를 한번 더 누르면 인포윈도우가 꺼지고, 마커를 처음눌렀을때는 우측에 카드에 해당화장실 정보로 스크롤해서 찾아간다.
+            if (infowindow.getMap()) {
+                infowindow.close();
+            } else {
+                infowindow.open(map, marker);
+                map.setCenter(infowindow.position)
+                $("#toilet-box").animate({
+                    scrollTop: $("#toilet-box").get(0).scrollTop + $(`#card-${i}`).position().top
+                }, 2000);
+            }
+        });
+    }
+
+    // 마커를 눌렀을때 지도를 가운데로 이동시키기
+    function click2center(i) {
+        let marker = markers[i]
+        let infowindow = infowindows[i]
+        if (infowindow.getMap()) {
+            infowindow.close();
+        } else {
+            infowindow.open(map, marker);
+            map.setCenter(infowindow.position)
+        }
+    }
+
+    // 리뷰보기 버튼을 누르면 숨겨져있던 해당 화장실의 리뷰 보여주기
+    function review() {
+        document.getElementById('good').style.display = 'block';
+    }
+
+    // 숨겨져있던 리뷰가 화면에 나타났을때 해당div가 아닌 다른곳을누르면 다시 사라짐(닫기기능)
+    $(document).click(function (event) {
+        $target = $(event.target);
+        if (!$target.closest('#good').length &&
+            $('#good').is(":visible")) {
+            $('#good').hide();
+        }
+    });
+
+    // 리뷰div에서 등록버튼을 눌렀을때 전해주는 데이터
+    function posting() {
+        let title = document.getElementById('title').innerHTML
+        let username = $('#username').val()
+        let star = $('#star_rating').val()
+        let comment = $('#comment').val()
+        let file = $('#file')[0].files[0]
+
+        let form_data = new FormData()
+
+        form_data.append("file_give", file)
+        form_data.append("username_give", username)
+        form_data.append("star_give", star)
+        form_data.append("comment_give", comment)
+        form_data.append("title_give", title)
+
+        $.ajax({
+            type: "POST",
+            url: "/info",
+            data: form_data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                alert(response["msg"])
+                window.location.reload()
+            }
+        })
+    }
+
+    // 등록했던 데이터를 기반으로 리뷰화면에 띄워주는 기능
+    function listing() {
+        $('#comment-box').empty()
+        $.ajax({
+            type: "GET",
+            url: "/info",
+            data: {},
+            success: function (response) {
+                let comment_list = response['users']
+                for (let i = 0; i < comment_list.length; i++) {
+                    let username = comment_list[i]['username']
+                    let star = comment_list[i]['star']
+                    let comment = comment_list[i]['comment']
+                    let file = comment_list[i]['file']
+                    let title = comment_list[i]['title']
+
+                    let star_image = '⭐'.repeat(star)
+
+                    let temp_html = ``
+
+                    if (title === document.getElementById('title').innerHTML) {
+                        temp_html = `<img src="../static/${file}" class="img">
+                                        <div class="review-box">
+                                        <div class="name-box">
+                                            <div id="name">${username}</div>
+                                            <div id="star">${star_image}</div>
+                                        </div>
+                                        <div class="comment">${comment}</div>
+                                        </div>`
+                    } else {
+                        temp_html = ``
+                    }
+                    $('#comment-box').append(temp_html)
+                }
+            }
+        })
+    }
+</script>
+</head>
+<body>
+<div class="wrap">
+    <div class="banner">
+        <div class="d-flex flex-column align-items-center"
+             style="background-color: rgba(0,0,0,0.5);width: 100%;height: 100%;">
+            <h1 class="title mt-5 mb-2">장실 카세</h1>
+        </div>
+    </div>
+    <div id="map">
+    </div>
+    <div class="toilet-list" id="toilet-box">
+        <div class="card" id="card-0">
+            <div class="card-body">
+                <h5 class="card-title"><a href="#" class="toilet-title">화장실</a></h5>
+                <p class="card-text">주소</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="good" style="display: none">
+    <div id="toilet-info" class="toilet-info">
+        <div class="shadow-xl">
+            <figure class="px-2 pt-10">
+                <img src="../static/다운로드.jpg" alt="Shoes" class="rounded-xl"/>
+            </figure>
+            <div class="card-body items-center text-center">
+                <div class="title_address" id="title_address">
+                </div>
+                <div id="starAvg">평균 별점</div>
+                <div class="comment-box" id="comment-box">
+                </div>
+                <div class="card-actions justify-end">
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="inputGroupSelect01">별점</label>
+                        <select class="form-select" id="star_rating">
+                            <option selected>-- 선택하기 --</option>
+                            <option value="1">⭐</option>
+                            <option value="2">⭐⭐</option>
+                            <option value="3">⭐⭐⭐</option>
+                            <option value="4">⭐⭐⭐⭐</option>
+                            <option value="5">⭐⭐⭐⭐⭐</option>
+                        </select>
+                    </div>
+                    <div class="custom-file">
+                        <input type="text" id="username" class="name-input" placeholder="닉네임">
+                        <input type="file" class="custom-file-input" id="file">
+                    </div>
+                    <div class="replbox" id="review-box">
+                        <textarea class="textarea textarea-success" id="comment" placeholder="리뷰를 남겨주세요."></textarea>
+                        <button class="btn btn-outline btn-success" style="color: white; font-size: 23px" onclick="posting()">등록</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>

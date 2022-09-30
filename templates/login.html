@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color: #ffffff">
+  <head>
+    <!-- Webpage Title -->
+    <title>login page</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!--material Icon-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,25" />
+    <!-- daisyUI & tailwindcss -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@2.28.0/dist/full.css"
+      rel="stylesheet"
+      type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!--static/common.css-->
+    <link
+      href="{{ url_for('static', filename='common.css') }}"
+      rel="stylesheet" />
+      <!--google font-->
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <script>
+      // {% if msg %}
+      //    alert("{{ msg }}")
+      // {% endif %}
+
+      function toggle_sign_up() {
+        $("#login-box").toggleClass("hidden");
+        $("#signup-box").toggleClass("hidden");
+      }
+
+      function is_nickname(asValue) {
+        var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{6,15}$/;
+        return regExp.test(asValue);
+      }
+
+      function is_password(asValue) {
+        var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
+        return regExp.test(asValue);
+      }
+
+      function check_dup() {
+        let username = $("#input-username").val();
+        console.log(username);
+        if (username == "") {
+          $("#help-id")
+            .text("아이디를 입력해주세요.")
+            .removeClass("safe")
+            .addClass("text-red-600");
+          $("#input-username").focus();
+          return;
+        }
+        if (!is_nickname(username)) {
+          $("#help-id")
+            .text(
+              "아이디의 형식을 확인해주세요. 영문과 숫자, 일부 특수문자(._-) 사용 가능. 6-15자 길이"
+            )
+            .removeClass("safe")
+            .addClass("text-red-600");
+          $("#input-username").focus();
+          return;
+        }
+        //$("#help-id").addClass("is-loading");
+        $.ajax({
+          type: "POST",
+          url: "/sign_up/check_dup",
+          data: {
+            username_give: username,
+          },
+          success: function (response) {
+            if (response["exists"]) {
+              $("#help-id")
+                .text("이미 존재하는 아이디입니다.")
+                .removeClass("text-green-500")
+                .addClass("text-red-600");
+              $("#input-username").focus();
+            } else {
+              $("#help-id")
+                .text("사용할 수 있는 아이디입니다.")
+                .removeClass("text-red-600")
+                .addClass("text-green-500");
+              $("#icon-ver").toggleClass("hidden");
+              $("#icon-done").toggleClass("hidden");
+            }
+            $("#help-id").removeClass("");
+          },
+        });
+      }
+
+      function sign_up() {
+        let username = $("#input-username").val();
+        let password = $("#input-password").val();
+        let password2 = $("#input-password2").val();
+        console.log(username, password, password2);
+
+        if ($("#help-id").hasClass("text-red-600")) {
+          alert("아이디를 다시 확인해주세요.");
+          return;
+        } else if (!$("#help-id").hasClass("text-green-500")) {
+          alert("아이디 중복확인을 해주세요.");
+          return;
+        }
+
+        if (password == "") {
+          $("#help-password")
+            .text("비밀번호를 입력해주세요.")
+            .removeClass("text-green-500")
+            .addClass("text-red-600");
+          $("#input-password").focus();
+          return;
+        } else if (!is_password(password)) {
+          $("#help-password")
+            .text(
+              "비밀번호의 형식을 확인해주세요. 영문과 숫자 필수 포함, 특수문자(!@#$%^&*) 사용가능 8-20자"
+            )
+            .removeClass("text-green-500")
+            .addClass("text-red-600");
+          $("#input-password").focus();
+          return;
+        } else {
+          $("#help-password")
+            .text("사용할 수 있는 비밀번호입니다.")
+            .removeClass("text-red-600")
+            .addClass("text-green-500");
+        }
+        if (password2 == "") {
+          $("#help-password2")
+            .text("비밀번호를 입력해주세요.")
+            .removeClass("text-green-500")
+            .addClass("text-red-600");
+          $("#input-password2").focus();
+          return;
+        } else if (password2 != password) {
+          $("#help-password2")
+            .text("비밀번호가 일치하지 않습니다.")
+            .removeClass("text-green-500")
+            .addClass("text-red-600");
+          $("#input-password2").focus();
+          return;
+        } else {
+          $("#help-password2")
+            .text("비밀번호가 일치합니다.")
+            .removeClass("text-red-600")
+            .addClass("text-green-500");
+        }
+        $.ajax({
+          type: "POST",
+          url: "/sign_up/save",
+          data: {
+            username_give: username,
+            password_give: password,
+          },
+          success: function (response) {
+              setTimeout(() => {
+                    $('#loading').removeClass('hidden');
+                }, 0)
+              alert('회원이 되셨습니다 :)');
+
+              setTimeout(() => {
+                    $('#loading').addClass('hidden');
+                    $('#alert').removeClass(alert_html);
+                }, 3000)
+              setTimeout(() => {
+                    window.location.replace("/login");
+                }, 3000)
+          },
+        });
+      }
+
+      function sign_in() {
+        let username = $("#input-username-login").val();
+        let password = $("#input-password-login").val();
+
+        if (username == "") {
+          $("#help-id-login").text("아이디를 입력해주세요.");
+          $("#input-username-login").focus();
+          return;
+        } else {
+          $("#help-id-login").text("");
+        }
+
+        if (password == "") {
+          $("#help-password-login").text("비밀번호를 입력해주세요.");
+          $("#input-password-login").focus();
+          return;
+        } else {
+          $("#help-password-login").text("");
+        }
+        $.ajax({
+          type: "POST",
+          url: "/sign_in",
+          data: {
+            username_give: username,
+            password_give: password,
+          },
+          success: function (response) {
+              $('#loading').removeClass('hidden');
+            if (response["result"] == "success") {
+                $.cookie("mytoken", response["token"], { path: "/" });
+                setTimeout(() => {
+                    $('#loading').removeClass('hidden');
+                    //alert('님 장실카세에 오신 것을 환영합니다 :)');
+                }, 0)
+
+                setTimeout(() => {
+                    window.location.replace("/");
+                }, 4000)
+                $('#loading').addClass('hidden');
+
+            } else {
+              alert(response["msg"]);
+              $('#loading').addClass('hidden');
+            }
+          },
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <div class="blurfilter">
+      <div class="hidden loading-ani" id="loading">
+        <div class="loader">
+      <div class="inner one"></div>
+      <div class="inner two"></div>
+      <div class="inner three"></div>
+</div>
+      </div>
+
+      <div
+        class="justify-center items-center absolute"
+        style="top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1)">
+       
+        <div
+          class="hidden glass-container"
+          id="signup-box"
+          style="transition: height 1s; height: 24rem">
+          <div class="card-body">
+            <div class="form-control">
+              <div class="input-group">
+                <input
+                  type="text"
+                  placeholder="ID"
+                  class="input w-[25rem]"
+                  id="input-username" 
+                  style="background: rgba( 255, 255, 255, 0.2 );
+                      box-shadow: 0 4px 4px 0 rgba( 31, 38, 135, 0.17 );
+                      backdrop-filter: blur( 20px );
+                      -webkit-backdrop-filter: blur( 20px );
+                      border-radius: 10px;
+                      border: 1px solid rgba( 255, 255, 255, 0.18 );
+                      border-bottom-right-radius: 0px 0px;
+                      border-top-right-radius: 0px 0px;"/>
+                <button
+                  class="btn btn-square w-[4rem]"
+                  id="double-chk"
+                  onclick="check_dup()"
+                  style="background: rgba( 0, 0, 0, 0.2 );
+                      box-shadow: 0 4px 4px 0 rgba( 31, 38, 135, 0.17 );
+                      backdrop-filter: blur( 20px );
+                      -webkit-backdrop-filter: blur( 20px );
+                      border-radius: 10px;
+                      border: 1px solid rgba( 255, 255, 255, 0.18 );
+                      border-bottom-left-radius: 0px 0px;
+                      border-top-left-radius: 0px 0px;">
+                  <span
+                    class="material-symbols-outlined"
+                    id="icon-done"
+                    style="color: #ffffff; background-color: transparent">
+                    Done
+                  </span>
+                  <span
+                    class="hidden material-symbols-outlined"
+                    id="icon-ver"
+                    style="color: green; background-color: transparent">
+                    verified
+                  </span>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-[#333232]" id="help-id">
+              영문과 숫자 조합의 6-15자의 아이디를 설정해주세요.
+              특수문자(!@#$%^&*)도 사용 가능합니다.
+            </p>
+
+            <input
+              type="text"
+              placeholder="Password"
+              class="input w-[29rem]"
+              id="input-password" 
+              style="background: rgba( 255, 255, 255, 0.2 );
+                  box-shadow: 0 4px 4px 0 rgba( 31, 38, 135, 0.17 );
+                  backdrop-filter: blur( 20px );
+                  -webkit-backdrop-filter: blur( 20px );
+                  border-radius: 10px;
+                  border: 1px solid rgba( 255, 255, 255, 0.18 );"/>
+            <p class="text-xs text-[#333232]" id="help-password">
+              영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요.
+              특수문자(!@#$%^&*)도 사용 가능합니다.
+            </p>
+
+            <input
+              type="text"
+              placeholder="Corrected Password"
+              class="input w-[29rem]"
+              id="input-password2"
+              style="background: rgba( 255, 255, 255, 0.2 );
+                  box-shadow: 0 4px 4px 0 rgba( 31, 38, 135, 0.17 );
+                  backdrop-filter: blur( 20px );
+                  -webkit-backdrop-filter: blur( 20px );
+                  border-radius: 10px;
+                  border: 1px solid rgba( 255, 255, 255, 0.18 );" />
+            <p class="text-xs text-[#333232]" id="help-password">
+              비밀번호를 다시 입력해주세요
+            </p>
+
+            <div class="card-actions justify-end">
+              <button
+                class="btn btn-primary"
+                onclick="sign_up()"
+                style="
+                  background: rgba(255, 255, 255, 0.15);
+                  box-shadow: 0 8px 8px 0 rgba(31, 38, 135, 0.37);
+                  backdrop-filter: blur(2.5px);
+                  -webkit-backdrop-filter: blur(2.5px);
+                  border-radius: 20px;
+                  border: 1px solid rgba(255, 255, 255, 0.18);
+                  color: #333232
+                ">
+                Confirm
+              </button>
+              &nbsp;
+              <button class="btn btn-primary" onclick="toggle_sign_up()"
+              style="
+                  background: rgba(255, 255, 255, 0.15);
+                  box-shadow: 0 8px 8px 0 rgba(31, 38, 135, 0.37);
+                  backdrop-filter: blur(2.5px);
+                  -webkit-backdrop-filter: blur(2.5px);
+                  border-radius: 20px;
+                  border: 1px solid rgba(255, 255, 255, 0.18);
+                  color: #333232
+                ">
+                Back to login
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 로그인 페이지 -->
+        <div class="glass-container" id="login-box" style="height: 25rem">
+          <div class="card-body">
+            <input
+              type="text"
+              placeholder="ID"
+              class="input w-[29rem]"
+              id="input-username-login"
+              style="background: rgba( 255, 255, 255, 0.2 );
+                  box-shadow: 0 4px 4px 0 rgba( 31, 38, 135, 0.17 );
+                  backdrop-filter: blur( 20px );
+                  -webkit-backdrop-filter: blur( 20px );
+                  border-radius: 10px;
+                  border: 1px solid rgba( 255, 255, 255, 0.18 );"/>
+            <p class="text-xs text-[#333232] mb-2" id="help-id-login"></p>
+            <input
+              type="text"
+              placeholder="Password"
+              class="input w-[29rem] mb-4"
+              id="input-password-login" 
+              style="background: rgba( 255, 255, 255, 0.2 );
+                    box-shadow: 0 4px 4px 0 rgba( 31, 38, 135, 0.17 );
+                    backdrop-filter: blur( 20px );
+                    -webkit-backdrop-filter: blur( 20px );
+                    border-radius: 10px;
+                    border: 1px solid rgba( 255, 255, 255, 0.18 );"/>
+            <p class="text-xs text-white" id="help-password-login"></p>
+            <div class="card-actions mt-[65px] justify-center">
+              <button
+                class="btn btn-primary w-[10rem]"
+                id="btn-login"
+                onclick="sign_in()"
+                style="
+                  background: rgba(255, 255, 255, 0.15);
+                  box-shadow: 0 8px 8px 0 rgba(31, 38, 135, 0.37);
+                  backdrop-filter: blur(2.5px);
+                  -webkit-backdrop-filter: blur(2.5px);
+                  border-radius: 20px;
+                  border: 1px solid rgba(255, 255, 255, 0.18);
+                  color: #333232
+                ">
+                Login</button>
+                <div class="bottom-text" style="font-family: 'Josefin Sans', sans-serif; font-size: 18px;">
+                  Don't have an account yet?
+              <p id="btn-signup" onclick="toggle_sign_up()"
+              style="left: 14rem; top: -1px; position: absolute; font-weight: bold;">
+                Sign Up </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
